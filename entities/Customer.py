@@ -14,20 +14,18 @@ class Customer:
         return self.balance
     
     def withdraw(self,amount):
-        if (amount <= self.balance):
-            self.balance -= amount
-            self.history.append(["Saque",amount,self.balance,str(datetime.datetime.now())])
-            return self.balance
-        else:
-            return -1
+        if (amount > self.balance):
+            raise ValueError("Erro ao efetuar saque! Não há saldo suficiente.")
+        self.balance -= amount
+        self.history.append(["Saque",amount,self.balance,str(datetime.datetime.now())])
+        return self.balance
     
     def transfer_send(self,amount,name):
-        if (amount <= self.balance):
-            self.balance -= amount
-            self.history.append([f"Transferência enviada para {name}",amount,self.balance,str(datetime.datetime.now())])
-            return self.balance
-        else:
-            return -1
+        if (amount > self.balance):
+            raise ValueError("Erro ao efetuar transferência! Não há saldo suficiente.")
+        self.balance -= amount
+        self.history.append([f"Transferência enviada para {name}",amount,self.balance,str(datetime.datetime.now())])
+        return self.balance
     
     def transfer_receive(self,amount,name):
         self.balance += amount

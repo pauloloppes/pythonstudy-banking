@@ -78,11 +78,11 @@ def withdraw():
     print("Entre com a quantia a ser sacada: >",end="")
     amount = float(input())
     if (amount > 0):
-        new_balance = client.withdraw(amount)
-        if (new_balance < 0):
-            print("Erro ao efetuar saque! Não há saldo suficiente.")
-        else:
+        try:
+            new_balance = client.withdraw(amount)
             print(f"Saque efetuado! Novo saldo de {client.name}: R$ {new_balance:.2f}")
+        except ValueError as error:
+            print(error)
     else:
         print("Valor inválido para saque!")
 
@@ -101,12 +101,12 @@ def transfer():
         print("Entre com a quantia a ser transferida: >",end="")
         amount = float(input())
         if (amount > 0):
-            new_balance = client_send.transfer_send(amount,client_receive.name)
-            if (new_balance < 0):
-                print("Erro ao efetuar transferência! Não há saldo suficiente.")
-            else:
+            try:
+                new_balance = client_send.transfer_send(amount,client_receive.name)
                 client_receive.transfer_receive(amount,client_send.name)
                 print(f"Transferência efetuada! Novo saldo de {client_send.name}: R$ {new_balance:.2f}")
+            except ValueError as error:
+                print(error)
         else:
             print("Valor inválido para transferência!")
 
