@@ -2,7 +2,10 @@ from entities.Customer import Customer
 from database import insert_new_customer_in_database
 from database import fetch_customer_in_database
 from database import fetch_all_customers_in_database
+from database import insert_new_transaction_in_database
+from decimal import Decimal, getcontext, ROUND_DOWN
 
+getcontext().rounding = ROUND_DOWN
 client_list = []
 option = 1
 
@@ -32,7 +35,11 @@ def new_client():
     print("--CADASTRO DE CLIENTE--")
     print("Entre com o nome do novo cliente: >",end="")
     name = input()
-    insert_new_customer_in_database(name)
+    try:
+        insert_new_customer_in_database(name)
+        print("Cliente inserido com sucesso!")
+    except Exception as error:
+        print(error)
 
 def list_clients():
     show_divisor()
@@ -68,32 +75,40 @@ def deposit():
     show_divisor()
     print("--EFETUAR DEPÓSITO--")
     print("Entre com o ID do cliente: >",end="")
-    client_id = int(input())
-    client = client_list[client_id]
-    print("Entre com a quantia a ser depositada: >",end="")
-    amount = float(input())
-    if (amount > 0):
-        new_balance = client.deposit(amount)
-        print(f"Depósito efetuado! Novo saldo de {client.name}: R$ {new_balance:.2f}")
-    else:
-        print("Valor inválido para depósito!")
+    customer_id = int(input())
+    try:
+        client = fetch_customer_in_database(customer_id)
+        print("Entre com a quantia a ser depositada: >",end="")
+        amount = round(Decimal(input()),2)
+        if (amount > 0):
+            new_balance = client.deposit(amount)
+            insert_new_transaction_in_database(client,amount,"Depósito")
+            print(f"Depósito efetuado! Novo saldo de {client.name}: R$ {new_balance:.2f}")
+        else:
+            print("Valor inválido para depósito!")
+    except Exception as error:
+        print("Problema em operação:",error)
 
 def withdraw():
     show_divisor()
     print("--EFETUAR SAQUE--")
     print("Entre com o ID do cliente: >",end="")
-    client_id = int(input())
-    client = client_list[client_id]
-    print("Entre com a quantia a ser sacada: >",end="")
-    amount = float(input())
-    if (amount > 0):
-        try:
-            new_balance = client.withdraw(amount)
-            print(f"Saque efetuado! Novo saldo de {client.name}: R$ {new_balance:.2f}")
-        except ValueError as error:
-            print(error)
-    else:
-        print("Valor inválido para saque!")
+    customer_id = int(input())
+    try:
+        client = fetch_customer_in_database(customer_id)
+        print("Entre com a quantia a ser sacada: >",end="")
+        amount = round(Decimal(input()),2)
+        if (amount > 0):
+            try:
+                new_balance = client.withdraw(amount)
+                insert_new_transaction_in_database(client,amount,"Saque")
+                print(f"Saque efetuado! Novo saldo de {client.name}: R$ {new_balance:.2f}")
+            except ValueError as error:
+                print(error)
+        else:
+            print("Valor inválido para saque!")
+    except Exception as error:
+        print("Problema em operação:",error)
 
 def transfer():
     show_divisor()

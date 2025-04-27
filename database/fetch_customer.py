@@ -7,7 +7,7 @@ def fetch_customer_in_database(id):
     SELECT name,balance FROM customers
     WHERE id={id}
     """
-    print(db_query)
+    
     try:
         with connect(
             **database_dictionary
@@ -17,7 +17,7 @@ def fetch_customer_in_database(id):
                 result = cursor.fetchall()
                 if not result:
                     raise ValueError("Cliente não encontrado!")
-                return Customer(result[0][0],result[0][1])
+                return Customer(result[0][0],result[0][1],id)
     except Error as e:
         raise e
 

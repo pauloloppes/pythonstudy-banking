@@ -1,0 +1,26 @@
+from mysql.connector import connect, Error
+from .database_variables import database_dictionary
+
+def insert_new_transaction_in_database(customer,amount,type):
+    db_query_transaction = f"""
+    INSERT INTO transactions (customer_id,amount,description,balance)
+    VALUES ('{customer.id}', {amount}, '{type}',{customer.balance})
+    """
+
+    db_query_update_balance = f"""
+    UPDATE customers SET balance={customer.balance}
+    WHERE id={customer.id}
+    """
+    
+    try:
+        with connect(
+            **database_dictionary
+        ) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(db_query_transaction)
+                cursor.execute(db_query_update_balance)
+                connection.commit()
+    except Error as e:
+        print("Problema em banco de dados:",e.msg)
+        connection.rollback()
+        raise e
