@@ -6,7 +6,7 @@ I created this project in order to learn Python beyond the basics of what I was 
 
 ## Things I'm hoping to accomplish in this project
 
-* MySQL Database integration
+* *MySQL Database integration* ✅**DONE**
 * RESTful APIs
 * Unit testing
 * Simple front-end
