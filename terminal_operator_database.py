@@ -4,6 +4,7 @@ from database import fetch_customer_in_database
 from database import fetch_all_customers_in_database
 from database import insert_new_transaction_in_database
 from database import insert_new_transfer_in_database
+from database import fetch_history_in_database
 from decimal import Decimal, getcontext, ROUND_DOWN
 
 getcontext().rounding = ROUND_DOWN
@@ -68,9 +69,12 @@ def show_history():
     print("--HISTÓRICO DE TRANSAÇÕES--")
     print("Entre com o ID do cliente: >",end="")
     customer_id = int(input())
-    customer = client_list[customer_id]
-    for i in customer.history[::-1]:
-        print(f"{i[0]}: R$ {i[1]:.2f}, Saldo resultante R$ {i[2]:.2f}. Data/hora: {i[3]}")
+    try:
+        history = fetch_history_in_database(customer_id)
+        for i in history:
+            print(f"{i[0]}: R$ {round(i[1],2)}, Saldo resultante R$ {round(i[2],2)}. Data/hora: {i[3]}")
+    except Exception as error:
+        print(error)
 
 def deposit():
     show_divisor()
@@ -132,25 +136,6 @@ def transfer():
                 print("Valor inválido para transferência!")
     except Exception as error:
         print("Problema em operação:",error)
-    return
-    client_send = client_list[id_send]
-    print("Entre com o ID do cliente a receber: >",end="")
-    id_receive = int(input())
-    client_receive = client_list[id_receive]
-    if (id_send == id_receive):
-        print("Não é possível transferir para a mesma conta.")
-    else:
-        print("Entre com a quantia a ser transferida: >",end="")
-        amount = float(input())
-        if (amount > 0):
-            try:
-                new_balance = client_send.transfer_send(amount,client_receive.name)
-                client_receive.transfer_receive(amount,client_send.name)
-                print(f"Transferência efetuada! Novo saldo de {client_send.name}: R$ {new_balance:.2f}")
-            except ValueError as error:
-                print(error)
-        else:
-            print("Valor inválido para transferência!")
 
 while (option > 0):
     show_main_menu()
