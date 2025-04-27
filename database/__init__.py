@@ -3,3 +3,4 @@ from .insert_new_customer import insert_new_customer_in_database
 from .fetch_customer import fetch_customer_in_database
 from .fetch_customer import fetch_all_customers_in_database
 from .insert_new_transaction import insert_new_transaction_in_database
+from .insert_new_transaction import insert_new_transfer_in_database
