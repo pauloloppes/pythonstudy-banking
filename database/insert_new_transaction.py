@@ -62,4 +62,4 @@ def insert_new_transfer_in_database(customer_send,amount,customer_receive):
                 return transaction_sent_id,transaction_received_id
     except Error as e:
         connection.rollback()
-        raise Exception(e.msg)
+        raise e

@@ -8,16 +8,13 @@ def fetch_history_in_database(id):
     WHERE customer_id={id}
     ORDER BY creation_date DESC
     """
-    
-    try:
-        with connect(
-            **database_dictionary
-        ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(db_query)
-                result = cursor.fetchall()
-                if not result:
-                    raise IndexError("Histórico vazio para o cliente selecionado.")
-                return result
-    except Error as e:
-        raise Exception(e.msg)
+
+    with connect(
+        **database_dictionary
+    ) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(db_query)
+            result = cursor.fetchall()
+            if not result:
+                raise IndexError("Histórico vazio para o cliente selecionado.")
+            return result

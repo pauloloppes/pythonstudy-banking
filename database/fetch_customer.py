@@ -7,38 +7,30 @@ def fetch_customer_in_database(id):
     SELECT name,balance FROM customers
     WHERE id={id}
     """
-    
-    try:
-        with connect(
-            **database_dictionary
-        ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(db_query)
-                result = cursor.fetchall()
-                if not result:
-                    raise IndexError(f"Cliente com ID {id} não encontrado!")
-                return Customer(result[0][0],result[0][1],id)
-    except Error as e:
-        print(repr(e))
-        raise Exception("Problema com banco de dados.",)
+    with connect(
+        **database_dictionary
+    ) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(db_query)
+            result = cursor.fetchall()
+            if not result:
+                raise IndexError(f"Cliente com ID {id} não encontrado!")
+            return Customer(result[0][0],result[0][1],id)
 
 def fetch_all_customers_in_database():
     db_query = f"""
     SELECT name,id FROM customers
     """
-    try:
-        with connect(
-            **database_dictionary
-        ) as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(db_query)
-                result = cursor.fetchall()
-                if not result:
-                    raise IndexError("Nenhum cliente encontrado!")
-                customer_list = []
-                for i in result:
-                    customer_list.append(Customer(i[0],id=i[1]))
-                return customer_list
-    except Error as e:
-        print(repr(e))
-        raise Exception("Problema com banco de dados.")
+
+    with connect(
+        **database_dictionary
+    ) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(db_query)
+            result = cursor.fetchall()
+            if not result:
+                raise IndexError("Nenhum cliente encontrado!")
+            customer_list = []
+            for i in result:
+                customer_list.append(Customer(i[0],id=i[1]))
+            return customer_list

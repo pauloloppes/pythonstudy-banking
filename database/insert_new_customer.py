@@ -15,4 +15,5 @@ def insert_new_customer_in_database(name):
                 connection.commit()
                 return cursor.lastrowid
     except Error as e:
-        raise Exception(e.msg)
+        connection.rollback()
+        raise e
