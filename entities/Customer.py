@@ -16,14 +16,14 @@ class Customer:
     
     def withdraw(self,amount):
         if (amount > self.balance):
-            raise ValueError("Erro ao efetuar saque! Não há saldo suficiente.")
+            raise ValueError("Não há saldo suficiente para efetuar o saque.")
         self.balance -= amount
         self.history.append(["Saque",amount,self.balance,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
         return self.balance
     
     def transfer_send(self,amount,name):
         if (amount > self.balance):
-            raise ValueError("Erro ao efetuar transferência! Não há saldo suficiente.")
+            raise ValueError("Não há saldo suficiente para efetuar a transferência.")
         self.balance -= amount
         self.history.append([f"Transferência enviada para {name}",amount,self.balance,datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
         return self.balance

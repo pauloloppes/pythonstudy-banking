@@ -13,6 +13,6 @@ def insert_new_customer_in_database(name):
             with connection.cursor() as cursor:
                 cursor.execute(db_query)
                 connection.commit()
-                print("Finished execution.")
+                return cursor.lastrowid
     except Error as e:
-        raise e
+        raise Exception(e.msg)

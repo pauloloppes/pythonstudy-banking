@@ -17,7 +17,7 @@ def fetch_history_in_database(id):
                 cursor.execute(db_query)
                 result = cursor.fetchall()
                 if not result:
-                    raise ValueError("Histórico vazio para o cliente selecionado.")
+                    raise IndexError("Histórico vazio para o cliente selecionado.")
                 return result
     except Error as e:
-        raise e
+        raise Exception(e.msg)

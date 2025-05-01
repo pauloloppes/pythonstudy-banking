@@ -18,10 +18,11 @@ def insert_new_transaction_in_database(customer,amount,type):
         ) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(db_query_transaction)
+                transaction_id = cursor.lastrowid
                 cursor.execute(db_query_update_balance)
                 connection.commit()
+                return transaction_id
     except Error as e:
-        print("Problema em banco de dados:",e.msg)
         connection.rollback()
         raise e
 
@@ -52,11 +53,13 @@ def insert_new_transfer_in_database(customer_send,amount,customer_receive):
         ) as connection:
             with connection.cursor() as cursor:
                 cursor.execute(db_query_transaction_sent)
+                transaction_sent_id = cursor.lastrowid
                 cursor.execute(db_query_transaction_received)
+                transaction_received_id = cursor.lastrowid
                 cursor.execute(db_query_update_sent)
                 cursor.execute(db_query_update_received)
                 connection.commit()
+                return transaction_sent_id,transaction_received_id
     except Error as e:
-        print("Problema em banco de dados:",e.msg)
         connection.rollback()
-        raise e
+        raise Exception(e.msg)

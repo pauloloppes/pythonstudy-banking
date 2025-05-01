@@ -173,4 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Files to mess around
 playground.py
+playground.http
+playground2.http

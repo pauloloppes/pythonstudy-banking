@@ -137,6 +137,8 @@ def transfer():
     except Exception as error:
         print("Problema em operação:",error)
 
+raise NotImplementedError
+
 while (option > 0):
     show_main_menu()
     option = int(input())
