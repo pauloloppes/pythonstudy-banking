@@ -1,5 +1,6 @@
 from mysql.connector import connect, Error
 from .database_variables import database_dictionary
+from .database_logger import logger
 
 def insert_new_transaction_in_database(customer,amount,type):
     db_query_transaction = f"""
@@ -17,13 +18,16 @@ def insert_new_transaction_in_database(customer,amount,type):
             **database_dictionary
         ) as connection:
             with connection.cursor() as cursor:
+                logger.debug(f"SQL query executed:{db_query_transaction}")
                 cursor.execute(db_query_transaction)
                 transaction_id = cursor.lastrowid
+                logger.debug(f"SQL query executed:{db_query_update_balance}")
                 cursor.execute(db_query_update_balance)
                 connection.commit()
                 return transaction_id
     except Error as e:
         connection.rollback()
+        logger.error(e)
         raise e
 
 def insert_new_transfer_in_database(customer_send,amount,customer_receive):

@@ -2,6 +2,7 @@ from flask import Flask, request, Response
 from decimal import Decimal, getcontext, ROUND_DOWN
 from entities.Customer import Customer
 from mysql.connector import Error
+from execution_logger import logger
 
 from database import insert_new_customer_in_database
 from database import fetch_customer_in_database
@@ -31,12 +32,13 @@ def get_customers():
                 "id": i.id,
                 "name": i.name
                 })
+        logger.info("API - Fetched list of customers.")
         return return_list, 200, {'Content-Type': 'application/json'}
     except Error as error:
-        print(repr(error))
+        logger.error(f"Database error - {repr(error)}")
         return {"message": "Não foi possível fazer operação no banco de dados."}, 500, {'Content-Type': 'application/json'}
     except Exception as error:
-        print(repr(error))
+        logger.error(repr(error),exc_info=True)
         return {"message": "Ocorreu algum problema ao processar solicitação."}, 400, {'Content-Type': 'application/json'}
 
 @app.route('/customers/<int:id>', methods=['GET'])
@@ -50,12 +52,13 @@ def get_customer_by_id(id):
         }
         return customer_data, 200, {'Content-Type': 'application/json'}
     except IndexError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":str(error)}, 404, {'Content-Type': 'application/json'}
     except Error as error:
-        print(repr(error))
+        logger.error(f"Database error - {repr(error)}")
         return {"message": "Não foi possível fazer operação no banco de dados."}, 500, {'Content-Type': 'application/json'}
     except Exception as error:
-        print(repr(error))
+        logger.error(repr(error),exc_info=True)
         return {"message": "Ocorreu algum problema ao processar solicitação."}, 400, {'Content-Type': 'application/json'}
 
 @app.route('/customers', methods=['POST'])
@@ -68,12 +71,13 @@ def add_customer():
             "new_customer_id": new_id
             }, 201, {'Content-Type': 'application/json'}
     except KeyError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":f"Parâmetro não encontrado no request: {error}"}, 400, {'Content-Type': 'application/json'}
     except Error as error:
-        print(repr(error))
+        logger.error(f"Database error - {repr(error)}")
         return {"message": "Não foi possível fazer operação no banco de dados."}, 500, {'Content-Type': 'application/json'}
     except Exception as error:
-        print(repr(error))
+        logger.error(repr(error),exc_info=True)
         return {"message": "Ocorreu algum problema ao processar solicitação."}, 400, {'Content-Type': 'application/json'}
 
 @app.route('/customers/<int:id>/transactions', methods=['GET'])
@@ -95,12 +99,13 @@ def get_customer_transactions(id):
             "transaction_list": return_list
         }, 200, {'Content-Type': 'application/json'}
     except IndexError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":str(error)}, 404, {'Content-Type': 'application/json'}
     except Error as error:
-        print(repr(error))
+        logger.error(f"Database error - {repr(error)}")
         return {"message": "Não foi possível fazer operação no banco de dados."}, 500, {'Content-Type': 'application/json'}
     except Exception as error:
-        print(repr(error))
+        logger.error(repr(error),exc_info=True)
         return {"message": "Ocorreu algum problema ao processar solicitação."}, 400, {'Content-Type': 'application/json'}
 
 @app.route('/customers/<int:id>/transactions', methods=['POST'])
@@ -145,16 +150,19 @@ def add_customer_transaction(id):
         else:
             raise ValueError("Valor deve ser uma quantia acima de zero.")
     except KeyError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":f"Parâmetro não encontrado no request: {error}"}, 400, {'Content-Type': 'application/json'}
     except IndexError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":str(error)}, 404, {'Content-Type': 'application/json'}
     except ValueError as error:
+        logger.error(repr(error),exc_info=True)
         return {"message":str(error)}, 400, {'Content-Type': 'application/json'}
     except Error as error:
-        print(repr(error))
+        logger.error(f"Database error - {repr(error)}")
         return {"message": "Não foi possível fazer operação no banco de dados."}, 500, {'Content-Type': 'application/json'}
     except Exception as error:
-        print(repr(error))
+        logger.error(repr(error),exc_info=True)
         return {"message": "Ocorreu algum problema ao processar solicitação."}, 400, {'Content-Type': 'application/json'}
 
 if __name__ == '__main__':
