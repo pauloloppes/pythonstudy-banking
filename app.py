@@ -48,7 +48,7 @@ def get_customer_by_id(id):
         customer_data = {
             "id": customer.id,
             "name": customer.name,
-            "balance": customer.balance
+            "balance": round(customer.balance,2)
         }
         return customer_data, 200, {'Content-Type': 'application/json'}
     except IndexError as error:
@@ -121,7 +121,7 @@ def add_customer_transaction(id):
                 return {
                     "message": f"Depósito efetuado!",
                     "transaction_id": transaction_id,
-                    "new_balance": new_balance
+                    "new_balance": round(new_balance,2)
                 }, 201, {'Content-Type': 'application/json'}
             elif (transaction_type== 'withdraw'):
                 new_balance = customer.withdraw(amount)
@@ -129,7 +129,7 @@ def add_customer_transaction(id):
                 return {
                     "message": f"Saque efetuado!",
                     "transaction_id": transaction_id,
-                    "new_balance": new_balance
+                    "new_balance": round(new_balance,2)
                 }, 201, {'Content-Type': 'application/json'}
             elif (transaction_type == 'transfer'):
                 id_customer_receive = request.json['id_customer_receive']
@@ -143,7 +143,7 @@ def add_customer_transaction(id):
                     "message": f"Transferência efetuada!",
                     "transaction_sent_id": transaction_sent_id,
                     "transaction_received_id": transaction_received_id,
-                    "new_balance": new_balance
+                    "new_balance": round(new_balance,2)
                 }, 201, {'Content-Type': 'application/json'}
             else:
                 raise ValueError("Tipo inválido de transação.")

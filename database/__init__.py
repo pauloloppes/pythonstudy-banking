@@ -1,4 +1,3 @@
-from .test_connection import test_database_connection
 from .insert_new_customer import insert_new_customer_in_database
 from .fetch_customer import fetch_customer_in_database
 from .fetch_customer import fetch_all_customers_in_database
